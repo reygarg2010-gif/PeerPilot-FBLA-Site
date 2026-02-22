@@ -11,8 +11,10 @@ import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 const nav = [
   { href: "/about", label: "About" },
   { href: "/resources", label: "Resources" },
+  { href: "/tutors", label: "Tutors" },
   { href: "/schedule", label: "Schedule" },
   { href: "/dashboard", label: "Dashboard" },
+  { href: "/help", label: "Help" }, // ✅ NEW
   { href: "/metrics", label: "Metrics" },
   { href: "/citations", label: "Citations" },
 ];
@@ -33,7 +35,9 @@ export default function SiteNav() {
         {/* Logo + Brand */}
         <Link href="/" className="flex items-center gap-3 font-semibold">
           <PeerPilotLogo className="h-8 w-8 text-indigo-600" />
-          <span className="text-lg font-semibold text-indigo-900">PeerPilot</span>
+          <span className="text-lg font-semibold text-indigo-900">
+            PeerPilot
+          </span>
         </Link>
 
         {/* Navigation */}
@@ -62,7 +66,9 @@ export default function SiteNav() {
 
         {/* Right Side */}
         <div className="flex items-center gap-3">
-          <div className="hidden text-xs text-slate-500 sm:block">Math • FBLA</div>
+          <div className="hidden text-xs text-slate-500 sm:block">
+            Math • FBLA
+          </div>
 
           {/* Auth */}
           <SignedOut>

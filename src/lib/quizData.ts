@@ -6,16 +6,19 @@ export type QuizQuestion = {
   explanation: string;
 };
 
+export type QuizTopic =
+  | "Algebra"
+  | "Geometry"
+  | "Trig"
+  | "Precalc"
+  | "Statistics"
+  | "SAT/PSAT"
+  | "APPrecalculus Review: Sinusoidal Curves";
+
 export type Quiz = {
   slug: string;
   title: string;
-  topic:
-    | "Algebra"
-    | "Geometry"
-    | "Trig"
-    | "Precalc"
-    | "Statistics"
-    | "SAT/PSAT";
+  topic: QuizTopic;
   questions: QuizQuestion[];
 };
 
@@ -120,6 +123,144 @@ export const quizzes: Quiz[] = [
         correctIndex: 0,
         explanation:
           "Vertical angles are opposite angles formed by intersecting lines and are always equal.",
+      },
+    ],
+  },
+
+  // -------------------------
+  // Trig Quiz
+  // -------------------------
+  {
+    slug: "trig-unit-circle",
+    title: "Trig Quick Check: Unit Circle Essentials",
+    topic: "Trig",
+    questions: [
+      {
+        id: "t1",
+        prompt: "Convert 180° to radians.",
+        choices: ["π/2", "π", "2π", "3π/2"],
+        correctIndex: 1,
+        explanation: "180° equals π radians.",
+      },
+      {
+        id: "t2",
+        prompt: "What is sin(π/2)?",
+        choices: ["0", "1", "-1", "√3/2"],
+        correctIndex: 1,
+        explanation: "At π/2, the unit circle point is (0, 1), so sin = 1.",
+      },
+      {
+        id: "t3",
+        prompt: "What is cos(0)?",
+        choices: ["0", "1", "-1", "√2/2"],
+        correctIndex: 1,
+        explanation: "At 0, the unit circle point is (1, 0), so cos = 1.",
+      },
+      {
+        id: "t4",
+        prompt: "In quadrant II, cosine is:",
+        choices: ["Positive", "Negative", "Zero", "Always 1"],
+        correctIndex: 1,
+        explanation: "Quadrant II has x < 0 and y > 0, so cosine (x) is negative.",
+      },
+      {
+        id: "t5",
+        prompt: "Which equals sin(30°)?",
+        choices: ["1/2", "√2/2", "√3/2", "0"],
+        correctIndex: 0,
+        explanation: "sin(30°) = 1/2 on the unit circle.",
+      },
+    ],
+  },
+
+  // -------------------------
+  // SAT/PSAT Quiz
+  // -------------------------
+  {
+    slug: "sat-psat-mini",
+    title: "SAT/PSAT Mini: Algebra + Data",
+    topic: "SAT/PSAT",
+    questions: [
+      {
+        id: "s1",
+        prompt: "If 5x − 3 = 22, what is x?",
+        choices: ["3", "4", "5", "7"],
+        correctIndex: 2,
+        explanation: "Add 3: 5x = 25. Divide by 5: x = 5.",
+      },
+      {
+        id: "s2",
+        prompt: "A line has slope -2 and y-intercept 7. Which is the equation?",
+        choices: ["y = 2x + 7", "y = -2x + 7", "y = -2x - 7", "y = 7x - 2"],
+        correctIndex: 1,
+        explanation: "Slope-intercept form is y = mx + b → y = -2x + 7.",
+      },
+      {
+        id: "s3",
+        prompt: "If (x + 4)(x - 4) = 0, then x can be:",
+        choices: ["Only 4", "Only -4", "4 or -4", "0"],
+        correctIndex: 2,
+        explanation: "Zero product property: x+4=0 → x=-4 OR x-4=0 → x=4.",
+      },
+      {
+        id: "s4",
+        prompt: "If the mean of 4 numbers is 10, what is their sum?",
+        choices: ["14", "40", "10", "4"],
+        correctIndex: 1,
+        explanation: "Mean = sum / count → sum = 10 × 4 = 40.",
+      },
+      {
+        id: "s5",
+        prompt: "Which is closest to 0.39 as a fraction?",
+        choices: ["2/5", "3/8", "4/9", "7/20"],
+        correctIndex: 0,
+        explanation: "2/5 = 0.4, which is closest to 0.39.",
+      },
+    ],
+  },
+
+  // -------------------------
+  // AP Precalc (Sinusoidal Curves) Quiz
+  // -------------------------
+  {
+    slug: "ap-precalc-sinusoidal",
+    title: "AP Precalculus: Sinusoidal Curves Basics",
+    topic: "APPrecalculus Review: Sinusoidal Curves",
+    questions: [
+      {
+        id: "p1",
+        prompt: "In y = A sin(Bx) + D, what does |A| represent?",
+        choices: ["Period", "Amplitude", "Phase shift", "Midline"],
+        correctIndex: 1,
+        explanation: "Amplitude is |A| (distance from midline to max/min).",
+      },
+      {
+        id: "p2",
+        prompt: "In y = A sin(Bx) + D, the period is:",
+        choices: ["2πB", "B/2π", "2π/|B|", "|B|/2π"],
+        correctIndex: 2,
+        explanation: "Period for sine/cosine is 2π/|B|.",
+      },
+      {
+        id: "p3",
+        prompt: "For y = 2sin(x) - 3, the midline is:",
+        choices: ["y = 2", "y = -3", "y = 0", "y = -1"],
+        correctIndex: 1,
+        explanation: "D = -3 shifts the graph down; midline is y = -3.",
+      },
+      {
+        id: "p4",
+        prompt: "For y = sin(3x), compared to y = sin(x), the period is:",
+        choices: ["Tripled", "One-third", "Same", "Shifted right"],
+        correctIndex: 1,
+        explanation: "Period = 2π/3, which is one-third of 2π.",
+      },
+      {
+        id: "p5",
+        prompt: "A phase shift inside sin(B(x - C)) shifts the graph:",
+        choices: ["Up/down", "Left/right", "Flips over x-axis", "Changes amplitude only"],
+        correctIndex: 1,
+        explanation: "C moves the graph horizontally (left/right).",
       },
     ],
   },

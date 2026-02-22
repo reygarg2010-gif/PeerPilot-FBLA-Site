@@ -1,158 +1,169 @@
+"use client";
+
 import PageShell from "@/components/PageShell";
 
-type Citation = {
-  id: string;
+type Ref = {
   title: string;
-  publisher: string;
+  details: string;
   url: string;
-  purpose: string;
-  accessed: string; // e.g., "2026-02-16"
 };
 
-const citations: Citation[] = [
+const refs: { section: string; items: Ref[] }[] = [
   {
-    id: "C1",
-    title: "Khan Academy — Math",
-    publisher: "Khan Academy",
-    url: "https://www.khanacademy.org/math",
-    purpose: "External learning resources linked from the Resources page (topic-aligned practice).",
-    accessed: "2026-02-16",
+    section: "Educational Content & Practice References",
+    items: [
+      {
+        title: "College Board — SAT Suite of Assessments",
+        details:
+          "Referenced for SAT/PSAT overview and general test framework (strategies reworded into PeerPilot’s own wording).",
+        url: "https://satsuite.collegeboard.org/",
+      },
+      {
+        title: "Khan Academy — Math (Algebra, Geometry, Trigonometry, Precalculus, Statistics)",
+        details:
+          "Used as a learning resource reference and for embedded instructional videos linked from PeerPilot Resources.",
+        url: "https://www.khanacademy.org/math",
+      },
+    ],
   },
   {
-    id: "C2",
-    title: "Desmos Graphing Calculator",
-    publisher: "Desmos Studio",
-    url: "https://www.desmos.com/calculator",
-    purpose: "Optional external tool linked for graphing/visual understanding.",
-    accessed: "2026-02-16",
+    section: "Original PeerPilot Content",
+    items: [
+      {
+        title: "PeerPilot Tutor Bios",
+        details:
+          "Written originally for PeerPilot by the team (unique bios per tutor).",
+        url: "/tutors",
+      },
+      {
+        title: "AP Precalculus Review Video — Sinusoidal Curves (55 min)",
+        details:
+          "Original PeerPilot video content created by Rey Garg and Brody Shnayder; hosted and embedded via Google Drive preview.",
+        url: "/resources",
+      },
+      {
+        title: "Tutor Headshots / Photos",
+        details:
+          "Photos provided by the PeerPilot team for demonstration and are not taken from third-party stock libraries.",
+        url: "/tutors",
+      },
+    ],
   },
   {
-    id: "C3",
-    title: "Next.js Documentation",
-    publisher: "Vercel",
-    url: "https://nextjs.org/docs",
-    purpose: "Framework reference for routing, layouts, and deployment best practices.",
-    accessed: "2026-02-16",
+    section: "Software / Frameworks / Platforms",
+    items: [
+      {
+        title: "Next.js Documentation",
+        details:
+          "Framework used to build the PeerPilot web app (routing, app directory, API routes).",
+        url: "https://nextjs.org/docs",
+      },
+      {
+        title: "React Documentation",
+        details: "UI library used for PeerPilot components and state management.",
+        url: "https://react.dev/",
+      },
+      {
+        title: "Tailwind CSS Documentation",
+        details:
+          "Utility-first CSS framework used for styling and responsive layout across the site.",
+        url: "https://tailwindcss.com/docs",
+      },
+      {
+        title: "Clerk Documentation",
+        details:
+          "Authentication and user management used for sign-in/sign-up and protected pages (Dashboard).",
+        url: "https://clerk.com/docs",
+      },
+      {
+        title: "Vercel Documentation",
+        details:
+          "Deployment platform used to host PeerPilot and deliver production builds.",
+        url: "https://vercel.com/docs",
+      },
+    ],
   },
   {
-    id: "C4",
-    title: "Tailwind CSS Documentation",
-    publisher: "Tailwind Labs",
-    url: "https://tailwindcss.com/docs",
-    purpose: "Design system + styling reference for consistent UI components.",
-    accessed: "2026-02-16",
+    section: "Email Notification System",
+    items: [
+      {
+        title: "Resend Documentation",
+        details:
+          "Email service used to send tutor notification emails when a student submits a session request (demo feature).",
+        url: "https://resend.com/docs",
+      },
+    ],
+  },
+  {
+    section: "Media Hosting / Embedding",
+    items: [
+      {
+        title: "Google Drive — File Preview / Embed",
+        details:
+          "Used to host and embed PeerPilot’s AP Precalculus sinusoidal curves video via the /preview link.",
+        url: "https://support.google.com/drive/",
+      },
+      {
+        title: "YouTube Embedding (for linked educational videos)",
+        details:
+          "Some linked resources use YouTube embedded players through the official video host (Khan Academy content hosted on YouTube).",
+        url: "https://support.google.com/youtube/answer/171780?hl=en",
+      },
+    ],
   },
 ];
-
-export const metadata = {
-  title: "Citations | PeerPilot",
-  description:
-    "Sources used in the PeerPilot website and linked educational resources.",
-};
 
 export default function CitationsPage() {
   return (
     <PageShell
       title="Citations"
-      subtitle="Sources and external tools referenced by PeerPilot. All links are educational and topic-aligned."
+      subtitle="PeerPilot credits the sources, tools, and platforms used to build this FBLA Website Design project."
     >
-      {/* Academic statement */}
-      <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-        <h2 className="text-lg font-semibold text-slate-900">
-          Academic Integrity Statement
-        </h2>
-        <p className="mt-2 text-sm leading-6 text-slate-600">
-          PeerPilot uses external resources strictly for educational support. When the
-          platform links to third-party learning tools (ex: videos, lessons, calculators),
-          links are chosen to match the topic and intended skill. This page documents those
-          sources and the purpose of each.
-        </p>
-
-        <div className="mt-4 grid gap-3 sm:grid-cols-3">
-          <InfoChip label="Citation Style" value="Structured web citations" />
-          <InfoChip label="Scope" value="External links + technical references" />
-          <InfoChip label="Note" value="Demo data is locally generated" />
-        </div>
-      </section>
-
-      {/* Citations table */}
-      <section className="mt-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <h2 className="text-lg font-semibold text-slate-900">Source List</h2>
-            <p className="mt-1 text-sm text-slate-600">
-              Click any link to open the source in a new tab.
-            </p>
-          </div>
-          <div className="text-xs text-slate-500">{citations.length} sources</div>
-        </div>
-
-        <div className="mt-4 overflow-hidden rounded-2xl border border-slate-200">
-          <div className="grid grid-cols-12 bg-slate-50 px-4 py-3 text-xs font-semibold text-slate-700">
-            <div className="col-span-2">ID</div>
-            <div className="col-span-4">Title</div>
-            <div className="col-span-2">Publisher</div>
-            <div className="col-span-3">Purpose</div>
-            <div className="col-span-1 text-right">Accessed</div>
-          </div>
-
-          {citations.map((c, idx) => (
-            <div
-              key={c.id}
-              className={[
-                "grid grid-cols-12 gap-2 px-4 py-4 text-sm",
-                idx !== citations.length - 1 ? "border-b border-slate-200" : "",
-              ].join(" ")}
-            >
-              <div className="col-span-2 font-semibold text-slate-900">{c.id}</div>
-
-              <div className="col-span-4">
-                <a
-                  href={c.url}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="font-semibold text-indigo-700 hover:underline"
-                >
-                  {c.title}
-                </a>
-                <div className="mt-1 text-xs text-slate-500 break-all">{c.url}</div>
-              </div>
-
-              <div className="col-span-2 text-slate-700">{c.publisher}</div>
-
-              <div className="col-span-3 text-slate-600">{c.purpose}</div>
-
-              <div className="col-span-1 text-right text-slate-600">
-                {c.accessed}
-              </div>
+      <div className="space-y-6">
+        {refs.map((group) => (
+          <div
+            key={group.section}
+            className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
+          >
+            <div className="text-lg font-semibold text-slate-900">
+              {group.section}
             </div>
-          ))}
-        </div>
 
-        <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
-          Tip: If judges click links, make sure they match the topic label shown in the
-          Resources page (Algebra/Geometry/Trig/etc.).
-        </div>
-      </section>
+            <div className="mt-4 grid gap-3">
+              {group.items.map((r) => (
+                <div
+                  key={r.title}
+                  className="rounded-xl border border-slate-200 bg-slate-50 p-4"
+                >
+                  <div className="text-sm font-semibold text-slate-900">
+                    {r.title}
+                  </div>
+                  <div className="mt-1 text-sm text-slate-600">{r.details}</div>
+                  <a
+                    href={r.url}
+                    target={r.url.startsWith("http") ? "_blank" : undefined}
+                    className="mt-2 inline-block text-sm font-semibold text-indigo-700 hover:underline"
+                  >
+                    {r.url.startsWith("http") ? "Open source" : "Open in site"} →
+                  </a>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
 
-      {/* Attribution / assets */}
-      <section className="mt-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-        <h2 className="text-lg font-semibold text-slate-900">Assets & Branding</h2>
-        <ul className="mt-3 space-y-2 text-sm text-slate-600">
-          <li>• PeerPilot logo is original (custom SVG component).</li>
-          <li>• No copyrighted images are embedded in the demo interface.</li>
-          <li>• UI components are coded in-house using Tailwind CSS utilities.</li>
-        </ul>
-      </section>
+        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div className="text-sm font-semibold text-slate-900">
+            Copyright / Fair Use Note
+          </div>
+          <p className="mt-2 text-sm text-slate-600">
+            PeerPilot links to or embeds educational resources from their official
+            hosts (e.g., Khan Academy/YouTube). PeerPilot does not re-upload or
+            claim ownership of third-party videos. Any strategy guidance is
+            written in PeerPilot’s own words with references credited above.
+          </p>
+        </div>
+      </div>
     </PageShell>
-  );
-}
-
-function InfoChip({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-      <div className="text-xs font-medium text-slate-600">{label}</div>
-      <div className="mt-1 text-sm font-semibold text-slate-900">{value}</div>
-    </div>
   );
 }

@@ -5,20 +5,24 @@ import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 
 import PageShell from "@/components/PageShell";
-import { demoSessions } from "@/lib/demoData";
-import { getRsvps } from "@/lib/rsvpStore";
 import {
   getAttempts,
   getAverageScore,
   type QuizAttempt,
 } from "@/lib/quizScoreStore";
 
+import {
+  getSessionRequests,
+  removeSessionRequest,
+  type SessionRequest,
+} from "@/lib/sessionRequestStore";
+
 export default function DashboardPage() {
   const router = useRouter();
   const { isLoaded, isSignedIn, user } = useUser();
 
-  const [rsvps, setRsvps] = useState<Record<string, boolean>>({});
   const [attempts, setAttempts] = useState<QuizAttempt[]>([]);
+  const [requests, setRequests] = useState<SessionRequest[]>([]);
 
   // Redirect if not signed in
   useEffect(() => {
@@ -29,19 +33,19 @@ export default function DashboardPage() {
   // Load demo data after sign-in confirmed
   useEffect(() => {
     if (!isLoaded || !isSignedIn) return;
-    setRsvps(getRsvps());
     setAttempts(getAttempts());
+    setRequests(getSessionRequests());
   }, [isLoaded, isSignedIn]);
-
-  const mySessions = useMemo(() => {
-    const ids = new Set(Object.keys(rsvps));
-    return demoSessions.filter((s) => ids.has(s.id));
-  }, [rsvps]);
 
   const avg = useMemo(() => getAverageScore(), [attempts]);
   const lastAttempt = attempts[0] ?? null;
 
   const firstName = user?.firstName ?? "Student";
+
+  function onCancelRequest(id: string) {
+    const next = removeSessionRequest(id);
+    setRequests(next);
+  }
 
   if (!isLoaded) {
     return (
@@ -66,11 +70,11 @@ export default function DashboardPage() {
   return (
     <PageShell
       title="Student Dashboard"
-      subtitle={`Welcome back, ${firstName}. Track your sessions and performance below.`}
+      subtitle={`Welcome back, ${firstName}. Track your tutoring requests and performance below.`}
     >
       {/* Top stats */}
       <div className="grid gap-4 sm:grid-cols-3">
-        <StatCard label="Upcoming Sessions" value={String(mySessions.length)} />
+        <StatCard label="Requested Sessions" value={String(requests.length)} />
         <StatCard label="Quiz Average" value={avg === null ? "—" : `${avg}%`} />
         <StatCard
           label="Last Quiz"
@@ -79,41 +83,28 @@ export default function DashboardPage() {
         />
       </div>
 
-      {/* My RSVPs */}
+      {/* My Session Requests */}
       <div className="mt-8">
-        <h2 className="text-lg font-semibold text-slate-900">My RSVPs</h2>
+        <h2 className="text-lg font-semibold text-slate-900">My Session Requests</h2>
         <p className="mt-1 text-sm text-slate-600">
-          Sessions you RSVP’d to from the Schedule page.
+          Requests you submitted from the Schedule page (demo mode).
         </p>
 
         <div className="mt-4 grid gap-3">
-          {mySessions.length === 0 ? (
+          {requests.length === 0 ? (
             <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
-              No RSVPs yet. Go to{" "}
+              No session requests yet. Go to{" "}
               <a
                 className="font-medium text-indigo-700 hover:underline"
                 href="/schedule"
               >
                 Schedule
               </a>{" "}
-              and RSVP to a session.
+              and request a session.
             </div>
           ) : (
-            mySessions.map((s) => (
-              <div
-                key={s.id}
-                className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
-              >
-                <div className="text-sm font-semibold text-slate-900">
-                  {s.title}
-                </div>
-                <div className="mt-1 text-sm text-slate-600">
-                  {s.day} • {s.time} • {s.location}
-                </div>
-                <div className="mt-2 inline-flex w-fit rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold text-slate-700">
-                  {s.type} • {s.level}
-                </div>
-              </div>
+            requests.slice(0, 8).map((r) => (
+              <RequestCard key={r.id} r={r} onCancel={() => onCancelRequest(r.id)} />
             ))
           )}
         </div>
@@ -147,7 +138,7 @@ export default function DashboardPage() {
               >
                 Resources
               </a>{" "}
-              and start the Algebra quiz.
+              and start a quiz.
             </div>
           ) : (
             attempts.slice(0, 6).map((a) => <AttemptRow key={a.id} a={a} />)
@@ -172,6 +163,57 @@ function StatCard({
       <div className="text-sm font-medium text-slate-600">{label}</div>
       <div className="mt-1 text-3xl font-semibold text-indigo-900">{value}</div>
       {sub ? <div className="mt-1 text-sm text-slate-600">{sub}</div> : null}
+    </div>
+  );
+}
+
+function RequestCard({
+  r,
+  onCancel,
+}: {
+  r: SessionRequest;
+  onCancel: () => void;
+}) {
+  const created = new Date(r.createdAtISO);
+  const createdLabel = isNaN(created.getTime())
+    ? ""
+    : created.toLocaleString(undefined, { month: "short", day: "numeric" });
+
+  return (
+    <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+        <div className="min-w-0">
+          <div className="text-sm font-semibold text-slate-900">
+            {r.topic}
+          </div>
+          <div className="mt-1 text-sm text-slate-600">
+            Tutor: {r.tutorName} • {r.day} @ {r.time} • {r.duration}
+            {createdLabel ? ` • Requested ${createdLabel}` : ""}
+          </div>
+
+          <div className="mt-2 flex flex-wrap gap-2">
+            <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold text-slate-700">
+              {r.goal}
+            </span>
+            <span className="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-800">
+              Online
+            </span>
+          </div>
+
+          {r.note ? (
+            <div className="mt-3 rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm text-slate-700">
+              <span className="font-semibold">Note:</span> {r.note}
+            </div>
+          ) : null}
+        </div>
+
+        <button
+          onClick={onCancel}
+          className="h-10 rounded-xl border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-900 hover:bg-slate-50"
+        >
+          Cancel
+        </button>
+      </div>
     </div>
   );
 }

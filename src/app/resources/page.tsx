@@ -10,6 +10,7 @@ import {
 } from "@/lib/resourceData";
 import { getSavedResourceIds, toggleSavedResource } from "@/lib/savedResourcesStore";
 import { quizzes } from "@/lib/quizData";
+import { topicTutors, getTutorById } from "@/lib/tutorsData";
 
 type TopicFilter = "All" | ResourceTopic;
 type TypeFilter = "All" | ResourceType;
@@ -85,6 +86,9 @@ export default function ResourcesPage() {
             <option value="Precalc">Precalc</option>
             <option value="Statistics">Statistics</option>
             <option value="SAT/PSAT">SAT/PSAT</option>
+            <option value="APPrecalculus Review: Sinusoidal Curves">
+              APPrecalculus Review: Sinusoidal Curves
+            </option>
           </select>
         </div>
 
@@ -119,7 +123,35 @@ export default function ResourcesPage() {
         </div>
       </div>
 
-      {/* Quiz Library (shows all quizzes, including Geometry) */}
+      {/* Tutors banner */}
+      <div className="mt-5 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <div className="text-sm font-semibold text-slate-900">
+              Online tutoring available
+            </div>
+            <div className="mt-1 text-sm text-slate-600">
+              Each topic has recommended tutors. Meet them and request sessions online.
+            </div>
+          </div>
+          <div className="flex gap-2">
+            <a
+              href="/tutors"
+              className="inline-flex h-10 items-center justify-center rounded-xl border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-900 hover:bg-slate-50"
+            >
+              Meet Tutors
+            </a>
+            <a
+              href="/schedule"
+              className="inline-flex h-10 items-center justify-center rounded-xl bg-indigo-600 px-4 text-sm font-semibold text-white hover:bg-indigo-700"
+            >
+              Request Session
+            </a>
+          </div>
+        </div>
+      </div>
+
+      {/* Quiz Library */}
       <QuizLibrary />
 
       {/* Saved section */}
@@ -225,6 +257,10 @@ function ResourceCard({
   saved: boolean;
   onToggleSave: () => void;
 }) {
+  const assigned = (topicTutors as any)[r.topic] as string[] | undefined;
+  const tutorObjects =
+    assigned?.map((id) => getTutorById(id as any)).filter(Boolean) ?? [];
+
   return (
     <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
       <div className="flex items-start justify-between gap-3">
@@ -239,6 +275,9 @@ function ResourceCard({
             <span className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs text-slate-600">
               Grade {r.grade}
             </span>
+           <span className="rounded-full border border-slate-300 bg-white px-3 py-1 text-xs font-semibold text-slate-900">
+  Online session
+</span>
           </div>
 
           <h3 className="text-base font-semibold text-slate-900">{r.title}</h3>
@@ -254,6 +293,23 @@ function ResourceCard({
               </span>
             ))}
           </div>
+
+          {/* Assigned tutors */}
+          {tutorObjects.length > 0 && (
+            <div className="mt-2 flex flex-wrap items-center gap-2">
+              <span className="text-xs font-semibold text-slate-700">Tutors:</span>
+              {tutorObjects.map((t) => (
+                <a
+                  key={t!.id}
+                  href="/tutors"
+                  className="rounded-full border border-slate-200 bg-white px-2 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-50"
+                  title="View tutor profiles"
+                >
+                  {t!.name}
+                </a>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="flex flex-col gap-2">
@@ -276,6 +332,13 @@ function ResourceCard({
           >
             {saved ? "Saved" : "Save"}
           </button>
+
+          <a
+            href="/schedule"
+            className="h-10 rounded-xl border border-indigo-200 bg-indigo-50 px-4 text-sm font-semibold text-indigo-900 hover:bg-indigo-100 grid place-items-center"
+          >
+            Request Session
+          </a>
         </div>
       </div>
     </div>
