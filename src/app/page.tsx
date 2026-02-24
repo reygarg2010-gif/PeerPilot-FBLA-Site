@@ -30,52 +30,53 @@ export default function HomePage() {
   const lastAttempt = attempts[0] ?? null;
 
   return (
-    <div className="bg-white">
+    <div className="bg-gradient-to-br from-indigo-300 via-slate-150 to-purple-300">
       {/* HERO */}
       <section className="mx-auto max-w-6xl px-4 pt-12 pb-10">
         <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
           {/* LEFT */}
           <div className="pp-fade-up">
-            <div className="flex items-center gap-3">
-              <PeerPilotLogo className="h-11 w-11 text-indigo-600" />
-              <div className="text-sm font-semibold tracking-wide text-indigo-700">
-                PEERPILOT • MATH LEARNING HUB
+            {/* subtle glass backing so hero text always reads well */}
+            <div className="rounded-3xl border border-white/40 bg-white/65 p-6 shadow-sm backdrop-blur sm:p-7">
+              <div className="flex items-center gap-3">
+                <PeerPilotLogo className="h-11 w-11 text-indigo-600" />
+                <div className="text-sm font-semibold tracking-wide text-indigo-700">
+                  PEERPILOT • MATH LEARNING HUB
+                </div>
               </div>
-            </div>
 
-            <h1 className="mt-4 text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl">
-              Organized resources. Real tutors.{" "}
-              <span className="text-indigo-700">Measurable progress.</span>
-            </h1>
+              <h1 className="mt-4 text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl">
+                Organized resources. Real tutors.{" "}
+                <span className="text-indigo-700">Measurable progress.</span>
+              </h1>
 
-            <p className="mt-4 max-w-xl text-base leading-7 text-slate-600">
-              PeerPilot brings trusted learning sites into one place, grouped by
-              topic, with quick practice and a personalized dashboard.
-            </p>
+              <p className="mt-4 max-w-xl text-base leading-7 text-slate-600">
+                PeerPilot brings trusted learning sites into one place, grouped
+                by topic, with quick practice and a personalized dashboard.
+              </p>
 
-            <div className="pp-fade-up pp-fade-up-delay-1 mt-6 flex flex-wrap gap-3">
-              <Link
-                href="/resources"
-                className="pp-button inline-flex h-11 items-center justify-center rounded-xl bg-indigo-600 px-5 text-sm font-semibold text-white hover:bg-indigo-700"
-              >
-                Explore by Topic
-              </Link>
-              <Link
-                href="/tutors"
-                className="pp-button inline-flex h-11 items-center justify-center rounded-xl border border-slate-200 bg-white px-5 text-sm font-semibold text-slate-900 hover:bg-slate-50"
-              >
-                Meet Our Tutors
-              </Link>
-              <Link
-                href="/dashboard"
-                className="pp-button inline-flex h-11 items-center justify-center rounded-xl border border-slate-200 bg-white px-5 text-sm font-semibold text-slate-900 hover:bg-slate-50"
-              >
-                View Dashboard
-              </Link>
-            </div>
+              <div className="pp-fade-up pp-fade-up-delay-1 mt-6 flex flex-wrap gap-3">
+                <Link
+                  href="/resources"
+                  className="pp-button inline-flex h-11 items-center justify-center rounded-xl bg-indigo-600 px-5 text-sm font-semibold text-white hover:bg-indigo-700"
+                >
+                  Explore by Topic
+                </Link>
+                <Link
+                  href="/tutors"
+                  className="pp-button inline-flex h-11 items-center justify-center rounded-xl border border-slate-200 bg-white/90 px-5 text-sm font-semibold text-slate-900 hover:bg-white"
+                >
+                  Meet Our Tutors
+                </Link>
+                <Link
+                  href="/dashboard"
+                  className="pp-button inline-flex h-11 items-center justify-center rounded-xl border border-slate-200 bg-white/90 px-5 text-sm font-semibold text-slate-900 hover:bg-white"
+                >
+                  View Dashboard
+                </Link>
+              </div>
 
-            <div className="pp-fade-up pp-fade-up-delay-2 mt-4 text-xs text-slate-500">
-              
+              <div className="pp-fade-up pp-fade-up-delay-2 mt-4 text-xs text-slate-500"></div>
             </div>
           </div>
 
@@ -86,9 +87,7 @@ export default function HomePage() {
                 <div className="text-sm font-semibold text-slate-900">
                   Live Snapshot
                 </div>
-                <div className="mt-1 text-xs text-slate-500">
-                 
-                </div>
+                <div className="mt-1 text-xs text-slate-500"></div>
               </div>
 
               <Link
@@ -127,7 +126,10 @@ export default function HomePage() {
                   <span className="text-slate-900 font-medium">
                     {lastAttempt.title}
                   </span>{" "}
-                  • <span className="font-semibold">{lastAttempt.scorePercent}%</span>
+                  •{" "}
+                  <span className="font-semibold">
+                    {lastAttempt.scorePercent}%
+                  </span>
                   <div className="mt-2">
                     <Link
                       href={`/quiz/${lastAttempt.slug}`}
@@ -155,7 +157,7 @@ export default function HomePage() {
       </section>
 
       {/* DIFFERENTIATORS (tight, not a text dump) */}
-      <section className="border-t border-slate-200 bg-slate-50">
+      <section className="border-t border-slate-200 bg-slate-50/80">
         <div className="mx-auto max-w-6xl px-4 py-10">
           <div className="pp-fade-up grid gap-4 md:grid-cols-3">
             <MiniHighlight
@@ -181,15 +183,13 @@ export default function HomePage() {
       </section>
 
       {/* VALUE GRID (replaces “features + how it works” redundancy) */}
-      <section className="mx-auto max-w-6xl px-4 py-12">
+      <section className="mx-auto max-w-6xl bg-white px-4 py-12">
         <div className="pp-fade-up flex items-end justify-between gap-4">
           <div>
             <h2 className="text-2xl font-semibold text-slate-900">
               Built For Accesibility
             </h2>
-            <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">
-          
-            </p>
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600"></p>
           </div>
 
           <Link

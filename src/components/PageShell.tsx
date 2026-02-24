@@ -12,10 +12,10 @@ export default function PageShell({
   actions?: ReactNode;
 }) {
   return (
-    <div className="min-h-[calc(100vh-120px)] bg-slate-50">
-      <div className="mx-auto w-full max-w-6xl px-4 py-10">
-        {/* Header (keeps pages from feeling like a giant text box) */}
-        <div className="mb-6">
+    <div className="min-h-[calc(100vh-120px)] bg-gradient-to-br from-indigo-200 via-slate-100 to-purple-200">
+      <div className="mx-auto w-full max-w-7xl px-4 py-10">
+        {/* Header */}
+        <div className="mb-6 animate-pp-fade">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <h1 className="text-3xl font-semibold tracking-tight text-indigo-900">
@@ -34,9 +34,15 @@ export default function PageShell({
         </div>
 
         {/* Content */}
-        <div className="rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <div
+          className={[
+            "rounded-2xl border border-slate-200 bg-white shadow-sm",
+            // Micro polish
+            "animate-pp-fade transition-all duration-200 ease-out",
+            "hover:-translate-y-0.5 hover:shadow-lg hover:shadow-indigo-200/40",
+          ].join(" ")}
+        >
           <div className="p-6 sm:p-8">
-            {/* Consistent content spacing */}
             <div className="space-y-8">{children}</div>
           </div>
         </div>

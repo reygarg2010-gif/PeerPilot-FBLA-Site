@@ -55,6 +55,26 @@ a {
 /* MICRO ANIMATIONS */
 /* -------------------------------- */
 
+/* New: gentle page fade-in (used by PageShell) */
+@keyframes ppFade {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+    filter: blur(1px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+/* This is a plain CSS class (not Tailwind), name matches PageShell usage */
+.animate-pp-fade {
+  animation: ppFade 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Existing fade-up */
 @keyframes fadeUp {
   from {
     opacity: 0;
@@ -169,6 +189,13 @@ a {
   }
 
   .pp-fade-up {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+
+  .animate-pp-fade {
     animation: none !important;
     opacity: 1 !important;
     transform: none !important;
