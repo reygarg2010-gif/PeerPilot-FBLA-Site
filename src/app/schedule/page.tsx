@@ -421,8 +421,7 @@ export default function SchedulePage() {
           </div>
 
           <div className="mt-4 text-xs text-slate-500">
-            Demo note: request is saved to Dashboard and sends an email to the
-            tutor.
+           
           </div>
         </div>
       </div>

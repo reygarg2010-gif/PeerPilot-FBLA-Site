@@ -2,6 +2,7 @@ import "./globals.css";
 import SiteNav from "@/components/SiteNav";
 import SiteFooter from "@/components/SiteFooter";
 import { ClerkProvider } from "@clerk/nextjs";
+import RouteTransition from "@/components/RouteTransition";
 
 export const metadata = {
   title: "PeerPilot | Math Learning Platform",
@@ -15,16 +16,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ClerkProvider>
-      <html lang="en">
-        <body className="min-h-screen bg-white text-slate-900">
+    <html lang="en">
+      <body className="min-h-screen bg-white text-slate-900">
+        <ClerkProvider>
           <div className="flex min-h-screen flex-col">
             <SiteNav />
-            <main className="flex-1">{children}</main>
+            <main className="flex-1">
+              <RouteTransition>{children}</RouteTransition>
+            </main>
             <SiteFooter />
           </div>
-        </body>
-      </html>
-    </ClerkProvider>
+        </ClerkProvider>
+      </body>
+    </html>
   );
 }

@@ -8,7 +8,10 @@ import {
   type ResourceTopic,
   type ResourceType,
 } from "@/lib/resourceData";
-import { getSavedResourceIds, toggleSavedResource } from "@/lib/savedResourcesStore";
+import {
+  getSavedResourceIds,
+  toggleSavedResource,
+} from "@/lib/savedResourcesStore";
 import { quizzes } from "@/lib/quizData";
 import { topicTutors, getTutorById } from "@/lib/tutorsData";
 
@@ -29,6 +32,7 @@ export default function ResourcesPage() {
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
+
     return resources.filter((r) => {
       const topicOk = topic === "All" ? true : r.topic === topic;
       const typeOk = type === "All" ? true : r.type === type;
@@ -55,115 +59,134 @@ export default function ResourcesPage() {
     setSavedIds(next);
   }
 
+  function clearFilters() {
+    setQuery("");
+    setTopic("All");
+    setType("All");
+    setGrade("All");
+  }
+
+  const filtersActive =
+    query.trim().length > 0 ||
+    topic !== "All" ||
+    type !== "All" ||
+    grade !== "All";
+
   return (
     <PageShell
       title="Resources"
-      subtitle="Search, filter, and save math resources. This is interactive in demo mode and will connect to accounts later."
+      subtitle="Browse by topic, filter fast, and save what you’ll use again."
+      actions={
+        <button
+          onClick={clearFilters}
+          className={[
+            "pp-button inline-flex h-10 items-center justify-center rounded-xl px-4 text-sm font-semibold transition-all duration-200 ease-out",
+            filtersActive
+              ? "border border-slate-200 bg-white text-slate-900 hover:bg-slate-50 hover:shadow-sm"
+              : "border border-slate-200 bg-white text-slate-400 cursor-not-allowed",
+          ].join(" ")}
+          disabled={!filtersActive}
+          title="Reset search + filters"
+        >
+          Clear filters
+        </button>
+      }
     >
-      {/* Controls */}
-      <div className="grid gap-3 md:grid-cols-4">
-        <div className="md:col-span-2 space-y-1">
-          <label className="text-sm font-medium text-slate-700">Search</label>
-          <input
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Try: slope, factoring, unit circle..."
-            className="h-10 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-900 outline-none"
-          />
+      {/* Filters Card */}
+      <div className="pp-card rounded-2xl border border-slate-200 bg-white p-5 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-lg">
+        <div className="grid gap-3 md:grid-cols-12">
+          <div className="md:col-span-5 space-y-1">
+            <label className="text-sm font-medium text-slate-700">Search</label>
+            <input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Try: slope, factoring, unit circle..."
+              className="h-10 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-300"
+            />
+          </div>
+
+          <div className="md:col-span-3 space-y-1">
+            <label className="text-sm font-medium text-slate-700">Topic</label>
+            <select
+              value={topic}
+              onChange={(e) => setTopic(e.target.value as TopicFilter)}
+              className="h-10 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-900"
+            >
+              <option value="All">All</option>
+              <option value="Algebra">Algebra</option>
+              <option value="Geometry">Geometry</option>
+              <option value="Trig">Trig</option>
+              <option value="Precalc">Precalc</option>
+              <option value="Statistics">Statistics</option>
+              <option value="SAT/PSAT">SAT/PSAT</option>
+              <option value="APPrecalculus Review: Sinusoidal Curves">
+                APPrecalculus Review: Sinusoidal Curves
+              </option>
+            </select>
+          </div>
+
+          <div className="md:col-span-2 space-y-1">
+            <label className="text-sm font-medium text-slate-700">Type</label>
+            <select
+              value={type}
+              onChange={(e) => setType(e.target.value as TypeFilter)}
+              className="h-10 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-900"
+            >
+              <option value="All">All</option>
+              <option value="Lesson">Lesson</option>
+              <option value="Video">Video</option>
+              <option value="Practice">Practice</option>
+              <option value="Download">Download</option>
+            </select>
+          </div>
+
+          <div className="md:col-span-2 space-y-1">
+            <label className="text-sm font-medium text-slate-700">Grade</label>
+            <select
+              value={grade}
+              onChange={(e) => setGrade(e.target.value as GradeFilter)}
+              className="h-10 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-900"
+            >
+              <option value="All">All</option>
+              <option value="9">9</option>
+              <option value="10">10</option>
+              <option value="11">11</option>
+              <option value="12">12</option>
+            </select>
+          </div>
         </div>
 
-        <div className="space-y-1">
-          <label className="text-sm font-medium text-slate-700">Topic</label>
-          <select
-            value={topic}
-            onChange={(e) => setTopic(e.target.value as TopicFilter)}
-            className="h-10 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-900"
-          >
-            <option value="All">All</option>
-            <option value="Algebra">Algebra</option>
-            <option value="Geometry">Geometry</option>
-            <option value="Trig">Trig</option>
-            <option value="Precalc">Precalc</option>
-            <option value="Statistics">Statistics</option>
-            <option value="SAT/PSAT">SAT/PSAT</option>
-            <option value="APPrecalculus Review: Sinusoidal Curves">
-              APPrecalculus Review: Sinusoidal Curves
-            </option>
-          </select>
-        </div>
-
-        <div className="space-y-1">
-          <label className="text-sm font-medium text-slate-700">Type</label>
-          <select
-            value={type}
-            onChange={(e) => setType(e.target.value as TypeFilter)}
-            className="h-10 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-900"
-          >
-            <option value="All">All</option>
-            <option value="Lesson">Lesson</option>
-            <option value="Video">Video</option>
-            <option value="Practice">Practice</option>
-            <option value="Download">Download</option>
-          </select>
-        </div>
-
-        <div className="space-y-1">
-          <label className="text-sm font-medium text-slate-700">Grade</label>
-          <select
-            value={grade}
-            onChange={(e) => setGrade(e.target.value as GradeFilter)}
-            className="h-10 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-900"
-          >
-            <option value="All">All</option>
-            <option value="9">9</option>
-            <option value="10">10</option>
-            <option value="11">11</option>
-            <option value="12">12</option>
-          </select>
+        <div className="mt-3 flex items-center justify-between text-xs text-slate-500">
+          <div />
+          <div className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1">
+            {filtered.length} results
+          </div>
         </div>
       </div>
 
-      {/* Tutors banner */}
-      <div className="mt-5 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+      {/* Highlights row */}
+      <div className="grid gap-3">
+        <QuizHighlight />
+      </div>
+
+      {/* Saved */}
+      <div>
+        <div className="flex items-end justify-between gap-3">
           <div>
-            <div className="text-sm font-semibold text-slate-900">
-              Online tutoring available
-            </div>
+            <h2 className="text-lg font-semibold text-slate-900">Saved</h2>
             <div className="mt-1 text-sm text-slate-600">
-              Each topic has recommended tutors. Meet them and request sessions online.
+              Your saved items (stored locally for demo).
             </div>
           </div>
-          <div className="flex gap-2">
-            <a
-              href="/tutors"
-              className="inline-flex h-10 items-center justify-center rounded-xl border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-900 hover:bg-slate-50"
-            >
-              Meet Tutors
-            </a>
-            <a
-              href="/schedule"
-              className="inline-flex h-10 items-center justify-center rounded-xl bg-indigo-600 px-4 text-sm font-semibold text-white hover:bg-indigo-700"
-            >
-              Request Session
-            </a>
+          <div className="text-sm text-slate-600">
+            {savedResources.length} saved
           </div>
-        </div>
-      </div>
-
-      {/* Quiz Library */}
-      <QuizLibrary />
-
-      {/* Saved section */}
-      <div className="mt-6">
-        <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-slate-900">Saved</h2>
-          <div className="text-sm text-slate-600">{savedResources.length} saved</div>
         </div>
 
         {savedResources.length === 0 ? (
           <div className="mt-3 rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
-            No saved resources yet. Click “Save” on any resource below.
+            No saved resources yet. Click{" "}
+            <span className="font-semibold">Save</span> on any resource below.
           </div>
         ) : (
           <div className="mt-3 grid gap-3 sm:grid-cols-2">
@@ -180,10 +203,25 @@ export default function ResourcesPage() {
       </div>
 
       {/* Results */}
-      <div className="mt-8">
-        <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-slate-900">All Resources</h2>
-          <div className="text-sm text-slate-600">{filtered.length} results</div>
+      <div>
+        <div className="flex items-end justify-between gap-3">
+          <div>
+            <h2 className="text-lg font-semibold text-slate-900">Results</h2>
+            <div className="mt-1 text-sm text-slate-600">
+              Browse resources and open them in a new tab.
+            </div>
+          </div>
+
+          {filtersActive ? (
+            <button
+              onClick={clearFilters}
+              className="pp-button inline-flex h-10 items-center justify-center rounded-xl border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-900 transition-all duration-200 ease-out hover:bg-slate-50 hover:shadow-sm"
+            >
+              Reset
+            </button>
+          ) : (
+            <div className="text-sm text-slate-600">{filtered.length} items</div>
+          )}
         </div>
 
         <div className="mt-3 grid gap-3 sm:grid-cols-2">
@@ -207,42 +245,55 @@ export default function ResourcesPage() {
   );
 }
 
-function QuizLibrary() {
+function QuizHighlight() {
   return (
-    <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-      <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+    <div className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-lg">
+      {/* Accent bar */}
+      <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-blue-500" />
+
+      <div className="flex items-start justify-between gap-3">
         <div>
           <div className="text-lg font-semibold text-slate-900">Quizzes</div>
           <div className="mt-1 text-sm text-slate-600">
-            Quick checks with instant feedback. Scores appear in your Dashboard.
+            Quick checks with instant feedback. Scores show in Dashboard.
           </div>
         </div>
-        <div className="text-xs text-slate-500">Demo mode • local score tracking</div>
+
+        <span className="rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-900">
+          {Math.min(5, quizzes.length)} Available
+        </span>
       </div>
 
-      <div className="mt-4 grid gap-3 sm:grid-cols-2">
-        {quizzes.map((q) => (
+      {/* 5 quiz cards - full width on large screens */}
+      <div className="mt-5 grid gap-3 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
+        {quizzes.slice(0, 5).map((q) => (
           <div
             key={q.slug}
-            className="rounded-2xl border border-slate-200 bg-slate-50 p-4"
+            className="group rounded-2xl border border-slate-200 bg-slate-50 p-4 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md"
           >
-            <div className="flex items-start justify-between gap-3">
+            <div className="flex flex-col gap-3">
               <div>
-                <div className="text-sm font-semibold text-slate-900">{q.title}</div>
+                <div className="text-sm font-semibold text-slate-900 transition-colors group-hover:text-indigo-700">
+                  {q.title}
+                </div>
                 <div className="mt-1 text-sm text-slate-600">
-                  Topic: {q.topic} • {q.questions.length} questions
+                  {q.topic} • {q.questions.length} Qs
                 </div>
               </div>
 
               <a
                 href={`/quiz/${q.slug}`}
-                className="inline-flex h-10 items-center rounded-xl bg-indigo-600 px-4 text-sm font-semibold text-white hover:bg-indigo-700"
+                className="pp-button inline-flex h-9 items-center justify-center rounded-xl bg-indigo-600 px-3 text-sm font-semibold text-white transition-all duration-200 ease-out hover:-translate-y-0.5 hover:bg-indigo-700 hover:shadow-md active:translate-y-0"
               >
-                Start
+                Start Quiz
               </a>
             </div>
           </div>
         ))}
+      </div>
+
+      <div className="mt-3 text-xs text-slate-500">
+        Tip: Try one quiz, then check your score in Dashboard.
       </div>
     </div>
   );
@@ -261,10 +312,20 @@ function ResourceCard({
   const tutorObjects =
     assigned?.map((id) => getTutorById(id as any)).filter(Boolean) ?? [];
 
+  const tagsToShow = r.tags.slice(0, 4);
+  const extra = Math.max(0, r.tags.length - tagsToShow.length);
+
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-      <div className="flex items-start justify-between gap-3">
-        <div className="space-y-2">
+    <div
+      className={[
+        "pp-card rounded-2xl border border-slate-200 bg-white p-5",
+        "transition-all duration-200 ease-out",
+        "hover:-translate-y-0.5 hover:shadow-lg",
+      ].join(" ")}
+    >
+      <div className="flex items-start justify-between gap-4">
+        {/* Left content */}
+        <div className="min-w-0 space-y-2">
           <div className="flex flex-wrap items-center gap-2">
             <span className="rounded-full bg-indigo-600 px-3 py-1 text-xs font-semibold text-white">
               {r.type}
@@ -275,16 +336,19 @@ function ResourceCard({
             <span className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs text-slate-600">
               Grade {r.grade}
             </span>
-           <span className="rounded-full border border-slate-300 bg-white px-3 py-1 text-xs font-semibold text-slate-900">
-  Online session
-</span>
+
+            {tutorObjects.length > 0 ? (
+              <span className="rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-900">
+                Online help
+              </span>
+            ) : null}
           </div>
 
           <h3 className="text-base font-semibold text-slate-900">{r.title}</h3>
           <p className="text-sm text-slate-600">{r.description}</p>
 
           <div className="flex flex-wrap gap-2">
-            {r.tags.map((t) => (
+            {tagsToShow.map((t) => (
               <span
                 key={t}
                 className="rounded-full bg-slate-100 px-2 py-1 text-xs text-slate-700"
@@ -292,31 +356,44 @@ function ResourceCard({
                 {t}
               </span>
             ))}
+            {extra > 0 ? (
+              <span className="rounded-full bg-slate-100 px-2 py-1 text-xs text-slate-700">
+                +{extra}
+              </span>
+            ) : null}
           </div>
 
-          {/* Assigned tutors */}
-          {tutorObjects.length > 0 && (
+          {tutorObjects.length > 0 ? (
             <div className="mt-2 flex flex-wrap items-center gap-2">
-              <span className="text-xs font-semibold text-slate-700">Tutors:</span>
-              {tutorObjects.map((t) => (
+              <span className="text-xs font-semibold text-slate-700">
+                Tutors:
+              </span>
+              {tutorObjects.slice(0, 3).map((t) => (
                 <a
                   key={t!.id}
                   href="/tutors"
-                  className="rounded-full border border-slate-200 bg-white px-2 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-50"
+                  className="rounded-full border border-slate-200 bg-white px-2 py-1 text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-50"
                   title="View tutor profiles"
                 >
                   {t!.name}
                 </a>
               ))}
+              {tutorObjects.length > 3 ? (
+                <span className="text-xs text-slate-500">
+                  +{tutorObjects.length - 3} more
+                </span>
+              ) : null}
             </div>
-          )}
+          ) : null}
         </div>
 
-        <div className="flex flex-col gap-2">
+        {/* Right actions: smaller + premium hover */}
+        <div className="flex shrink-0 flex-col items-end gap-2">
           <a
             href={r.url}
             target="_blank"
-            className="h-10 rounded-xl bg-indigo-600 px-4 text-sm font-semibold text-white hover:bg-indigo-700 grid place-items-center"
+            rel="noreferrer"
+            className="pp-button inline-flex items-center justify-center whitespace-nowrap rounded-full bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition-all duration-200 ease-out hover:-translate-y-0.5 hover:bg-indigo-700 hover:shadow-md active:translate-y-0"
           >
             Open
           </a>
@@ -324,7 +401,9 @@ function ResourceCard({
           <button
             onClick={onToggleSave}
             className={[
-              "h-10 rounded-xl px-4 text-sm font-semibold transition",
+              "pp-button inline-flex items-center justify-center whitespace-nowrap rounded-full",
+              "px-4 py-2 text-sm font-semibold transition-all duration-200 ease-out",
+              "hover:-translate-y-0.5 hover:shadow-sm active:translate-y-0",
               saved
                 ? "border border-indigo-200 bg-indigo-50 text-indigo-900 hover:bg-indigo-100"
                 : "border border-slate-200 bg-white text-slate-900 hover:bg-slate-50",
@@ -335,12 +414,42 @@ function ResourceCard({
 
           <a
             href="/schedule"
-            className="h-10 rounded-xl border border-indigo-200 bg-indigo-50 px-4 text-sm font-semibold text-indigo-900 hover:bg-indigo-100 grid place-items-center"
+            className="pp-button inline-flex items-center justify-center whitespace-nowrap rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-900 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:bg-slate-50 hover:shadow-sm active:translate-y-0"
           >
             Request Session
           </a>
         </div>
       </div>
     </div>
+  );
+}
+
+function LinkButton({
+  href,
+  label,
+  variant,
+}: {
+  href: string;
+  label: string;
+  variant: "primary" | "outline";
+}) {
+  if (variant === "primary") {
+    return (
+      <a
+        href={href}
+        className="pp-button inline-flex h-10 items-center justify-center rounded-xl bg-indigo-600 px-4 text-sm font-semibold text-white transition-all duration-200 ease-out hover:-translate-y-0.5 hover:bg-indigo-700 hover:shadow-md active:translate-y-0"
+      >
+        {label}
+      </a>
+    );
+  }
+
+  return (
+    <a
+      href={href}
+      className="pp-button inline-flex h-10 items-center justify-center rounded-xl border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-900 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:bg-slate-50 hover:shadow-sm active:translate-y-0"
+    >
+      {label}
+    </a>
   );
 }
